@@ -23,6 +23,7 @@ var jumpCount = 0;
 var music;
 var pop;
 var aw;
+var scream;
 var started;
 var game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -74,12 +75,14 @@ function preload () {
   this.load.audio("music", ["assets/background.mp3"]);
   this.load.audio("pop", ["assets/pop.mp3"]);
   this.load.audio("aw", ["assets/aw.mp3"]);
+  this.load.audio("scream", ["assets/scream.mp3"]);
 }
 function create() {
   music = this.sound.add("music", { loop: true })
   music.play();
   pop = this.sound.add("pop", { loop: true })
   aw = this.sound.add("aw")
+  scream = this.sound.add("scream")
   platforms = this.physics.add.staticGroup();
   let x = 45;
   while(true) {
@@ -175,6 +178,7 @@ function kill (player, enemy)
 }
 function hitBomb (player, bomb)
 {
+  secream.play();
   this.physics.pause();
   player.setTint(0xff0000);
   gameOver = true;
