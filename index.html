@@ -19,6 +19,7 @@ var scoreText;
 var bombs;
 var maxPlatform;
 var gameOver;
+var jumpCount = 0;
 var game = new Phaser.Game({
   type: Phaser.AUTO,
   width: W,
@@ -34,7 +35,9 @@ var game = new Phaser.Game({
   },
 })
 function update() {
-  if (gameOver) return;
+  if (gameOver) {
+    return
+  }
   if (cursors.left.isDown) {
     player.setVelocityX(-260);
     player.flipX = true;
@@ -68,7 +71,7 @@ function create() {
   for(let i=0; i<10; i++) {
     let randX = Math.random() * W
     let randY = Math.random() * (H-232) + 200
-    let times = Math.floor(Math.random() * 7)
+    let times = Math.floor(Math.random() * 3) + 1
     for(let k=0; k<times; k++) {
       platforms.create(randX + k*45, randY, 'ground').setScale(0.5).refreshBody()
     }
@@ -103,7 +106,7 @@ function create() {
     //child.setBounceY(Phaser.Math.FloatBetween(0.8, 1));
     child.setBounceY(1);
     child.setBounceX(1)
-    child.setScale(0.3);
+    child.setScale(0.2);
     child.setCollideWorldBounds(true);
   });
   this.physics.add.collider(enemies, platforms);
@@ -114,11 +117,18 @@ function create() {
 
   scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
 
+  let restartButton = this.add.text(16, 64, "Click anywhere to restart", { fontSize: '32px', fill: 'gold' });
+  this.input.on('pointerdown', () => {
+    location.href = location.href;
+    //this.scene.restart();
+  })
 
   bombs = this.physics.add.group();
   //this.physics.add.collider(bombs, platforms, hitPlatform, null, this);
   this.physics.add.collider(bombs, platforms)
   this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+
 
 }
 function kill (player, enemy)
