@@ -4,7 +4,7 @@
 <style>
 body { margin: 0; }
 </style>
-<script src="/phaser.min.js"></script>
+<script src="./phaser.min.js"></script>
 </head>
 <body>
 <script>
@@ -176,14 +176,12 @@ function kill (player, enemy)
   bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
 
 }
-function hitBomb (player, bomb)
-{
+function hitBomb (player, bomb) {
   secream.play();
   this.physics.pause();
   player.setTint(0xff0000);
   gameOver = true;
 }
-
 </script>
 </body>
 </html>
