@@ -4,7 +4,8 @@
   "description": "A complete self-contained phaser game in a git repository",
   "main": "index.html",
   "scripts": {
-    "frontend": "http-server"
+    "frontend": "http-server",
+    "start": "http-server"
   },
   "repository": {
     "type": "git",
