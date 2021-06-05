@@ -1,0 +1,19 @@
+{
+  "name": "self-contained-phaser",
+  "version": "0.0.1",
+  "description": "A complete self-contained phaser game in a git repository",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/skogard/self-contained-phaser.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/skogard/self-contained-phaser/issues"
+  },
+  "homepage": "https://github.com/skogard/self-contained-phaser#readme"
+}
