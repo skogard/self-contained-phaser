@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+body { margin: 0; }
+</style>
+<script src="/phaser.min.js"></script>
+</head>
+<body>
+<script>
+var W = window.innerWidth;
+var H = window.innerHeight;
+var platforms;
+var player;
+var cursors;
+var enemies;
+var score = 0;
+var scoreText;
+var bombs;
+var maxPlatform;
+var gameOver;
+var game = new Phaser.Game({
+  type: Phaser.AUTO,
+  width: W,
+  height: H,
+  physics: {
+    default: 'arcade',
+    arcade: { gravity: { y: 800 } }
+  },
+  scene: {
+    preload: preload,
+    update: update,
+    create: create
+  },
+})
+function update() {
+  if (gameOver) return;
+  if (cursors.left.isDown) {
+    player.setVelocityX(-260);
+    player.flipX = true;
+    player.anims.play('left', true);
+  } else if (cursors.right.isDown) {
+    player.setVelocityX(260);
+    player.flipX = false;
+    player.anims.play('right', true);
+  } else {
+    player.setVelocityX(0);
+  }
+  if (cursors.up.isDown && player.body.touching.down) {
+  //if (cursors.up.isDown) {
+    player.setVelocityY(-1030);
+  }
+}
+function preload () {
+  this.load.image('ground', 'assets/grid.png');
+  this.load.image('enemy', 'assets/yanpi.png');
+  this.load.image('bomb', 'assets/bomb.png');
+  this.load.spritesheet('hero', 'assets/spritesheet.png', { frameWidth: 779, frameHeight: 565 });
+}
+function create() {
+  platforms = this.physics.add.staticGroup();
+  let x = 45;
+  while(true) {
+    platforms.create(x, H-15, 'ground').setScale(0.5).refreshBody()
+    x+=45;
+    if (x>=W) break;
+  }
+  for(let i=0; i<10; i++) {
+    let randX = Math.random() * W
+    let randY = Math.random() * (H-232) + 200
+    let times = Math.floor(Math.random() * 7)
+    for(let k=0; k<times; k++) {
+      platforms.create(randX + k*45, randY, 'ground').setScale(0.5).refreshBody()
+    }
+  }
+  maxPlatform = platforms.countActive()
+  player = this.physics.add.sprite(0, 0, 'hero');
+  player.setSize(200, 565);
+  player.setScale(0.2, 0.2);
+  player.setBounce(0.5);
+  player.setCollideWorldBounds(true);
+  player.body.setGravityY(800)
+  this.physics.add.collider(player, platforms);
+  this.anims.create({
+    key: 'left',
+    frames: this.anims.generateFrameNumbers('hero', { enemyt: 0, end: 11 }),
+    frameRate: 60,
+    repeat: -1
+  });
+  this.anims.create({
+    key: 'right',
+    frames: this.anims.generateFrameNumbers('hero', { enemyt: 0, end: 11 }),
+    frameRate: 60,
+    repeat: -1
+  });
+  cursors = this.input.keyboard.createCursorKeys();
+  enemies = this.physics.add.group({ key: 'enemy', repeat: 3, });
+  enemies.children.iterate(function (child) {
+    let vX = Math.random() * 400 - 200
+    child.setVelocityX(vX);
+    child.x = Math.random() * W;
+    child.y = Math.random() * (H-200);
+    //child.setBounceY(Phaser.Math.FloatBetween(0.8, 1));
+    child.setBounceY(1);
+    child.setBounceX(1)
+    child.setScale(0.3);
+    child.setCollideWorldBounds(true);
+  });
+  this.physics.add.collider(enemies, platforms);
+  //this.physics.add.collider(enemies, player)
+  this.physics.add.overlap(player, enemies, kill, null, this);
+
+
+
+  scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#fff' });
+
+
+  bombs = this.physics.add.group();
+  //this.physics.add.collider(bombs, platforms, hitPlatform, null, this);
+  this.physics.add.collider(bombs, platforms)
+  this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+}
+function kill (player, enemy)
+{
+  enemy.disableBody(true, true);
+  score += 10;
+  scoreText.setText('Score: ' + score);
+
+  enemies.children.iterate(function (child) {
+    if (!child.active) {
+      let x = Math.random() * (W-100) +100 
+      let b = child.enableBody(true, x, 0, true, true);
+      let vX = Math.random() * 400 - 200
+      b.setVelocityX(vX);
+    }
+  });
+
+  var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
+  var bomb = bombs.create(x, 16, 'bomb');
+  bomb.setBounce(1);
+  bomb.setCollideWorldBounds(true);
+  bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+
+}
+function hitBomb (player, bomb)
+{
+  this.physics.pause();
+  player.setTint(0xff0000);
+  gameOver = true;
+}
+
+</script>
+</body>
+</html>
