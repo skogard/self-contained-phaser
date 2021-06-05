@@ -20,6 +20,10 @@ var bombs;
 var maxPlatform;
 var gameOver;
 var jumpCount = 0;
+var music;
+var pop;
+var aw;
+var started;
 var game = new Phaser.Game({
   type: Phaser.AUTO,
   width: W,
@@ -42,10 +46,18 @@ function update() {
     player.setVelocityX(-260);
     player.flipX = true;
     player.anims.play('left', true);
+    if (!started) {
+      pop.play();
+      started = true;
+    }
   } else if (cursors.right.isDown) {
     player.setVelocityX(260);
     player.flipX = false;
     player.anims.play('right', true);
+    if (!started) {
+      pop.play();
+      started = true;
+    }
   } else {
     player.setVelocityX(0);
   }
@@ -59,8 +71,15 @@ function preload () {
   this.load.image('enemy', 'assets/Yanpi.png');
   this.load.image('bomb', 'assets/bomb.png');
   this.load.spritesheet('hero', 'assets/spritesheet.png', { frameWidth: 779, frameHeight: 565 });
+  this.load.audio("music", ["assets/background.mp3"]);
+  this.load.audio("pop", ["assets/pop.mp3"]);
+  this.load.audio("aw", ["assets/aw.mp3"]);
 }
 function create() {
+  music = this.sound.add("music", { loop: true })
+  music.play();
+  pop = this.sound.add("pop", { loop: true })
+  aw = this.sound.add("aw")
   platforms = this.physics.add.staticGroup();
   let x = 45;
   while(true) {
@@ -133,6 +152,7 @@ function create() {
 }
 function kill (player, enemy)
 {
+  aw.play();
   enemy.disableBody(true, true);
   score += 10;
   scoreText.setText('Score: ' + score);
