@@ -4,7 +4,7 @@
   "description": "A complete self-contained phaser game in a git repository",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "frontend": "http-server"
   },
   "repository": {
     "type": "git",
@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/skogard/self-contained-phaser/issues"
   },
-  "homepage": "https://github.com/skogard/self-contained-phaser#readme"
+  "homepage": "https://github.com/skogard/self-contained-phaser#readme",
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
 }
